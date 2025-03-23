@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Entities;
 using Entities.Models;
 
+namespace WebApi.controllers;
+
 [ApiController]
 [Route("api/[controller]")]
 public class ProductController : ControllerBase

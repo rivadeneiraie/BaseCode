@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.controllers;
 
-
 [ApiController]
 [Route("api/[controller]")]
 public class WeatherForecastController : ControllerBase
