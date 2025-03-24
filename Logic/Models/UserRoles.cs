@@ -1,4 +1,4 @@
-namespace WebApi.Models
+namespace Logic.Models
 {
     public static class UserRoles
     {

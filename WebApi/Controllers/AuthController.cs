@@ -1,5 +1,5 @@
-﻿using WebApi.Services;
-using WebApi.Models;
+﻿using Logic.Models;
+using Logic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.controllers

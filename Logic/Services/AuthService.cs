@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using WebApi.Models;
+using Logic.Models;
+using Logic.Interfaces;
 
-namespace WebApi.Services
+namespace Logic.Services
 {
     public class AuthService : IAuthService
     {
@@ -31,7 +33,7 @@ namespace WebApi.Services
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.Username,
                 FirstName = model.FirstName,
-                LastName = model.LastName,
+                LastName = model.LastName ?? "",
             };
             var createUserResult = await userManager.CreateAsync(user, model.Password);
             if (!createUserResult.Succeeded)
@@ -49,7 +51,7 @@ namespace WebApi.Services
         public async Task<(int,string)> Login(LoginModel model)
         {
             var user = await userManager.FindByNameAsync(model.Username);
-            if (user == null)
+            if (user == null || user.UserName == null)
                 return (0, "Invalid username");
             if (!await userManager.CheckPasswordAsync(user, model.Password))
                 return (0, "Invalid password");
@@ -69,10 +71,9 @@ namespace WebApi.Services
             return (1, token);
         }
 
-
         private string GenerateToken(IEnumerable<Claim> claims)
         {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"])); 
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"] ?? "XXXX")); 
             var _TokenExpiryTimeInHour = Convert.ToInt64(_configuration["JwtSettings:TokenExpiryTimeInHour"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {

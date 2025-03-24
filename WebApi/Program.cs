@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models; 
 using Entities;
-using WebApi.Models;
-using WebApi.Services;
+using Logic.Interfaces;
+using Logic.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,6 +64,7 @@ builder.Services.AddAuthentication(options =>
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 })
 // Adding Jwt Bearer  
+
 .AddJwtBearer(options =>
 {
     options.SaveToken = true;
@@ -75,7 +76,7 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["JwtSettings:Audience"],
         ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
         ClockSkew = TimeSpan.Zero,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"] ?? "XXXX"))
     };
 });
 

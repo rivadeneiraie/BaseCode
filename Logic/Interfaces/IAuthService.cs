@@ -1,6 +1,6 @@
-﻿using WebApi.Models;
+﻿using Logic.Models;
 
-namespace WebApi.Services
+namespace Logic.Interfaces
 {
     public interface IAuthService
     {

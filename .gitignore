@@ -4,3 +4,6 @@ WebApi/appsettings.Development.json
 
 Entities/bin
 Entities/obj
+
+Logic/bin
+Logic/obj
