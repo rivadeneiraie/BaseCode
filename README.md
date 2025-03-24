@@ -7,3 +7,5 @@ Código base para la creación de proyecto en Net Core 8
 dotnet ef migrations add InitialCreate --startup-project ../WebApi/WebApi.csproj
 
 dotnet ef database update --startup-project ../WebApi/WebApi.csproj 
+
+sqlcmd -S localhost -U sa -P 'Poty2011' -C

@@ -1,6 +1,8 @@
-@WebApi_HostAddress = http://localhost:5290
-
-GET {{WebApi_HostAddress}}/api/WeatherForecast
+## Test api
+GET http://localhost:5290/api/WeatherForecast
 Accept: application/json
 
-###
+
+### User register 
+
+
