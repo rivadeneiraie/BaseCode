@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Logic.Models
 {
-    public class RegistrationModel
+    public class RegistrationRequestModel
     {
         [Required(ErrorMessage = "User Name is required")]
         public required string Username { get; set; }

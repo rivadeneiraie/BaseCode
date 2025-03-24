@@ -4,7 +4,7 @@ namespace Logic.Interfaces
 {
     public interface IAuthService
     {
-        Task<(int, string)> Registration(RegistrationModel model, string role);
-        Task<(int, string)> Login(LoginModel model);
+        Task<(int, string)> Registration(RegistrationRequestModel model, string role);
+        Task<(int, string)> Login(LoginRequestModel model);
     }
 }

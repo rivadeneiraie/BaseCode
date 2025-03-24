@@ -6,22 +6,23 @@ using System.Security.Claims;
 using System.Text;
 using Logic.Models;
 using Logic.Interfaces;
+using Entities.Models;
 
 namespace Logic.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly RoleManager<IdentityRole> roleManager;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly RoleManager<ApplicationRole> roleManager;
         private readonly IConfiguration _configuration;
-        public AuthService(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public AuthService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IConfiguration configuration)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
             _configuration = configuration;
 
         }
-        public async Task<(int,string)> Registration(RegistrationModel model,string role)
+        public async Task<(int,string)> Registration(RegistrationRequestModel model,string role)
         {
             var userExists = await userManager.FindByNameAsync(model.Username);
             if (userExists != null)
@@ -39,16 +40,13 @@ namespace Logic.Services
             if (!createUserResult.Succeeded)
                 return (0,"User creation failed! Please check user details and try again.");
 
-            if (!await roleManager.RoleExistsAsync(role))
-                await roleManager.CreateAsync(new IdentityRole(role));
-
             if (await roleManager.RoleExistsAsync(role))
-                await userManager.AddToRoleAsync(user, role);
+                await userManager.AddToRoleAsync(user, "User");
 
             return (1,"User created successfully!");
         }
 
-        public async Task<(int,string)> Login(LoginModel model)
+        public async Task<(int,string)> Login(LoginRequestModel model)
         {
             var user = await userManager.FindByNameAsync(model.Username);
             if (user == null || user.UserName == null)
