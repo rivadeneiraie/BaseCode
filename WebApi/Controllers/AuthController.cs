@@ -1,78 +1,64 @@
-using Microsoft.AspNetCore.Identity;
+﻿using WebApi.Services;
+using WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
-using Entities.Models;
 
-namespace WebApi.controllers;
-
-[Route("api/[controller]")]
-[ApiController]
-public class AuthController : ControllerBase
+namespace WebApi.controllers
 {
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly SignInManager<IdentityUser> _signInManager;
-
-    public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AuthenticationController : ControllerBase
     {
-        _userManager = userManager;
-        _signInManager = signInManager;
-    }
+        private readonly IAuthService _authService;
+        private readonly ILogger<AuthenticationController> _logger;
 
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterModel model)
-    {
-        var user = new IdentityUser { UserName = model.UserName, Email = model.Email };
-        var result = await _userManager.CreateAsync(user, model.Password);
-
-        if (result.Succeeded)
+        public AuthenticationController(IAuthService authService, ILogger<AuthenticationController> logger)
         {
-            return Ok(new { Message = "User registered successfully!" });
+            _authService = authService;
+            _logger = logger;
         }
 
-        return BadRequest(result.Errors);
-    }
 
-    [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginModel model)
-    {
-        var user = await _userManager.FindByNameAsync(model.UserName);
-        if (user == null)
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Login(LoginModel model)
         {
-            return Unauthorized(new { Message = "Invalid username or password" });
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest("Invalid payload");
+                var (status, message) = await _authService.Login(model);
+                if (status == 0)
+                    return BadRequest(message);
+                return Ok(message);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
-        var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
-
-        if (result.Succeeded)
+        [HttpPost]
+        [Route("registeration")]
+        public async Task<IActionResult> Register(RegistrationModel model)
         {
-            return Ok(new { Message = "User logged in successfully!" });
+            try
+            {
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid payload");
+            var (status, message) = await _authService.Registration(model, UserRoles.Admin);
+            if (status == 0)
+            {
+                return BadRequest(message);
+            }
+            return CreatedAtAction(nameof(Register), model);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
-
-        return Unauthorized(new { Message = "Invalid username or password" });
-    }
-}
-
-public class RegisterModel
-{
-    public string UserName { get; set; }
-    public string Email { get; set; }
-    public string Password { get; set; }
-
-    public RegisterModel(string userName, string email, string password)
-    {
-        UserName = userName ?? throw new ArgumentNullException(nameof(userName));  
-        Email = email ?? throw new ArgumentNullException(nameof(email));  
-        Password = password ?? throw new ArgumentNullException(nameof(password));  
-    }
-}
-
-public class LoginModel
-{
-    public string UserName { get; set; }
-    public string Password { get; set; }
-    
-    public LoginModel(string userName, string password)
-    {
-        UserName = userName ?? throw new ArgumentNullException(nameof(userName));  
-        Password = password ?? throw new ArgumentNullException(nameof(password));  
     }
 }

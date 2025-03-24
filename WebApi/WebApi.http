@@ -3,6 +3,16 @@ GET http://localhost:5290/api/WeatherForecast
 Accept: application/json
 
 
-### User register 
+### User login 
+POST http://localhost:5290/api/authentication/login
+Content-Type: application/json
 
+{
+    "username":"Ivan",
+    "password":"qweQWE123!#"
+}
 
+###Obtener productos 
+GET http://localhost:5290/api/Product
+Accept: application/json
+Authorization: Bearer XXXeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Ikl2YW4iLCJqdGkiOiI2M2VhMzNkNy1jYzg2LTRiZWQtOGY4Yy02NmQ5OTY5YmQ5ODQiLCJuYmYiOjE3NDI3ODMyMDYsImV4cCI6MTc0Mjc5NDAwNiwiaWF0IjoxNzQyNzgzMjA2LCJpc3MiOiJiYXNlX2NvZGVfaXNzdWVyIiwiYXVkIjoiYmFzZV9jb2RlX2F1ZGllbmNlIn0.nq8wYpVlGdJOV1KFoLmiKn1FLCYf5Lc5DrsNl0pER2g

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Entities;
@@ -6,6 +7,7 @@ using Entities.Models;
 namespace WebApi.controllers;
 
 [ApiController]
+[Authorize] 
 [Route("api/[controller]")]
 public class ProductController : ControllerBase
 {
