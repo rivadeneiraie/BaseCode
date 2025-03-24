@@ -20,7 +20,7 @@ namespace WebApi.controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login(LoginModel model)
+        public async Task<IActionResult> Login(LoginRequestModel model)
         {
             try
             {
@@ -40,7 +40,7 @@ namespace WebApi.controllers
 
         [HttpPost]
         [Route("registeration")]
-        public async Task<IActionResult> Register(RegistrationModel model)
+        public async Task<IActionResult> Register(RegistrationRequestModel model)
         {
             try
             {
